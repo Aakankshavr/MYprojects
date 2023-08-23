@@ -1,0 +1,42 @@
+from typing import Optional
+import discord
+from discord.ext import commands
+intents=discord.Intents.default()
+
+
+class Dropdown(discord.ui.Select):
+    def __init__(self):
+        options=[
+            discord.SelectOption(label="Keyboard",value="keys"),
+            discord.SelectOption(label="Veena",value="veena"),
+            discord.SelectOption(label="Flute",value="flute"),
+            discord.SelectOption(label="Drums",value="drums"),
+            discord.SelectOption(label="Guitar",value="guitar"),
+            discord.SelectOption(label="Saxophone",value="Saxophone"),
+    ]
+
+        super().__init__(placeholder="Select an instrument",options=options)
+
+    async def callback(self,interaction:discord.Interaction):
+        await interaction.response.send_message("You selected {self.values[0]}")
+
+class Dropdownview(discord.ui.View):
+    def __init__(self, dropdown:discord.ui.Select):
+        super().__init__(timeout=60)
+        self.add_item(dropdown)
+
+class bot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="!",intents=discord.Intents())
+
+@bot.event()
+async def on_message(ctx):
+    await ctx.send("Hey! I'm a musical instruments tutor bot")
+
+@bot.command()
+async def dropdown(ctx):
+    dropdown=Dropdown()
+    view= DropdownView(dropdown)
+    await ctx.send("Select an instrument that you wish to learn",view=view)
+
+bot.run('MTEzMzM1NTk5MDMyMzA0NDQyMg.GPqGdL.N5n8haH78hR6B1GOM5EJHKFj4VUvYdf7Tjy0xo')
